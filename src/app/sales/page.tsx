@@ -95,7 +95,7 @@ export default function Home() {
 
                 <div className="my-2 p-2 flex flex-col w-full space-y-2 text-center">
                     <label className="text-center" htmlFor="reden">Reden</label>
-                    <div className="shadow-xl">
+                    <div className="shadow-xl rounded-md">
                     <select
                         name="reden"
                         defaultValue={Reden.divers}
@@ -123,7 +123,7 @@ export default function Home() {
 
                 <div className="my-2 p-2 flex flex-col w-full space-y-2 text-center">
                     <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
-                    <div className="shadow-xl">
+                    <div className="shadow-xl rounded-md">
                     <select
                         name="intuitweb"
                         defaultValue={InUitWeb.in}
@@ -141,7 +141,7 @@ export default function Home() {
                     type="submit"
                     className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
                 >
-                    Submit
+                    Opgeven
                 </button>
 
             </form>
