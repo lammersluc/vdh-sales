@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/utils/firebase";
+import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
+import { getDocs } from "firebase/firestore";
 
-export default function () {
+export default function Page() {
 
     const router = useRouter();
 
@@ -37,24 +38,10 @@ export default function () {
 
         setStatus('Downloaden...');
 
-        const res = await fetch('/api/sales?' + new URLSearchParams({
-            begin: begin.toString(),
-            eind: eind.toString()
-        }), {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + await auth.currentUser?.getIdToken(),
-            }
-        })
-
-        if (!res.ok) {
-            setStatus('Verstuur');
-            return toast.error('Er is iets misgegaan, probeer het opnieuw');
-        }
+        const docs = (await getDocs(sales)).docs.filter(doc => begin <= doc.data().datum && doc.data().datum <= eind).map(doc => doc.data());
 
         try {
-                const jsonData = await res.json();
+                const jsonData = docs;
                 const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
                 const url = window.URL.createObjectURL(jsonBlob);
                 const a = document.createElement('a');

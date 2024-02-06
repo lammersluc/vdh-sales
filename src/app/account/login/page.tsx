@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { auth, signIn } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function () {
+export default function Page() {
 
   const router = useRouter();
 

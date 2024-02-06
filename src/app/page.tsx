@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/utils/firebase";
+import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
+import { addDoc } from "firebase/firestore";
 
-export default function () {
+export default function Page() {
 
     enum Reden {
         divers = 'divers',
@@ -51,23 +52,35 @@ export default function () {
 
       setStatus('Versturen...');
       
-      const res = await fetch('/api/sales', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + await auth.currentUser?.getIdToken()
-          },
-          body: JSON.stringify({
-            ...formData,
-            datum: Date.now(),
-            gebruiker: auth.currentUser?.displayName || auth.currentUser?.email || 'Onbekend'
-          }),
-      })
+      // const res = await fetch('/api/sales', {
+      //     method: 'POST',
+      //     headers: {
+      //         'Content-Type': 'application/json',
+      //         'Authorization': 'Bearer ' + await auth.currentUser?.getIdToken()
+      //     },
+      //     body: JSON.stringify({
+      //       ...formData,
+      //       datum: Date.now(),
+      //       gebruiker: auth.currentUser?.displayName || auth.currentUser?.email || 'Onbekend'
+      //     }),
+      // })
 
-      if (!res.ok) {
-        setStatus('Verstuur');
-        return toast.error('Er is iets misgegaan, probeer het opnieuw');
-      }
+      // if (!res.ok) {
+      //   setStatus('Verstuur');
+      //   return toast.error('Er is iets misgegaan, probeer het opnieuw');
+      // }
+
+      try {
+
+        addDoc(sales, {
+          gebruiker: auth.currentUser?.displayName || auth.currentUser?.email || 'Onbekend',
+          datum: Date.now(),
+          ...formData
+        });
+
+    } catch (error: any) {
+        return toast.error(error.message);
+    }
 
       const form = document.getElementById('form') as HTMLFormElement;
       form.reset();
