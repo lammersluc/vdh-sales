@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
-import { getDocs } from "firebase/firestore";
+import { getDocs, query, where } from "firebase/firestore";
 
 export default function Page() {
 
@@ -38,7 +38,7 @@ export default function Page() {
 
         setStatus('Downloaden...');
 
-        const docs = (await getDocs(sales)).docs.filter(doc => begin <= doc.data().datum && doc.data().datum <= eind).map(doc => doc.data());
+        const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
 
         try {
                 const jsonData = docs;
