@@ -40,7 +40,7 @@ export default function Page() {
 
         setStatus('Laden...');
 
-        const d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
+        const d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
         
         if (d.length === 0) { 
             setStatus('Bekijk');
@@ -69,7 +69,7 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-24">
+        <main className="flex min-h-screen justify-center items-center">
             <FiHome onClick={() => router.push('/')} className="m-3 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
 
             {
@@ -107,26 +107,52 @@ export default function Page() {
 
                     </form>
                 ) : (
-                    <div className="flex flex-row flex-wrap w-full p-12 justify-center items-center">
-                        {
-                            docs.map((doc, i) => (
-                                <div key={i} className="m-4 py-4 px-6 text-black shadow-xl bg-slate-100 focus:outline-none rounded-md text-center">
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 py-0.5 px-1 rounded-md">Bedrijfsnaam</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{doc.bedrijfsnaam}</div></p>
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">Locatie</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{doc.locatie}</div></p>
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">Reden</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{doc.reden}</div></p>
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">Subreden</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{doc.subreden || 'geen'}</div></p>
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">Offerte</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{doc.offerte ? 'a': 'nee'}</div></p>
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">In/Uit/Web</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{doc.inuitweb}</div></p>
-                                    <p className="text-center flex flex-row justify-between w-full"><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">Datum</div><div className="m-1 bg-slate-200 p-0.5 px-1 rounded-md">{new Date(doc.datum).toLocaleDateString()}</div></p>
-                                </div>
-                            ))
-                        }
+                    <div className="overflow-scroll p-10">
+                    <table className="divide-y shadow-xl rounded-lg overflow-hidden">
+                        <thead className="bg-gray-100 rounded-lg">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Datum
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Bedrijfsnaam
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Locatie
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Reden
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Subreden
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Offerte
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    In/Uit/Web
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {docs.map((doc, i) => (
+                                <tr key={i} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(doc.datum).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{doc.bedrijfsnaam}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{doc.locatie}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{doc.reden}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{doc.subreden}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{doc.offerte ? 'ja' : 'nee'}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{doc.inuitweb}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                     </div>
                 )
             }
             
             <Toaster containerStyle={{textAlign:'center'}}/>
-
         </main>
     );
 

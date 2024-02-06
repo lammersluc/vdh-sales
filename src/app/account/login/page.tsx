@@ -36,7 +36,7 @@ export default function Page() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-white">
+    <main className="flex  min-h-screen justify-center items-center">
       <FiHome onClick={() => router.push('/')} className="m-3 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
 
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
