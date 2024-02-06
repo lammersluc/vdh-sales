@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
+import { FiHome } from "react-icons/fi";
 
 export default function Page() {
 
@@ -76,11 +77,12 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main className="flex min-h-screen flex-col mt-48 items-center justify-center p-24">
+            <FiHome onClick={() => router.push('/')} className="m-3 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
 
             <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 
-                <div className="my-2 w-full space-y-2 shadow-xl rounded-md text-center">
+                <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
                     <input
                         name="begin"
                         type="date"
@@ -91,7 +93,7 @@ export default function Page() {
                     />
                 </div>
 
-                <div className="my-2 w-full space-y-2 shadow-xl rounded-md text-center">
+                <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
                     <input
                         name="eind"
                         type="date"

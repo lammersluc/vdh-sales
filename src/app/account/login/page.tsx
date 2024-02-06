@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation"
 import { auth, signIn } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
+import { FiHome } from "react-icons/fi";
 
 export default function Page() {
 
@@ -35,7 +36,8 @@ export default function Page() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white">
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-white">
+      <FiHome onClick={() => router.push('/')} className="m-3 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
 
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
 
