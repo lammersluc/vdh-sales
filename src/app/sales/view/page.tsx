@@ -100,7 +100,7 @@ export default function Page() {
             {
                 visible ? (
 
-                    <div className="mt-48 justify-center">
+                    <div className="mt-48 m-8">
                         
                         {
                             userOptions.length > 0 && (
@@ -121,7 +121,7 @@ export default function Page() {
                             )
                         }
 
-                        <table className="divide-y mx-auto shadow-xl rounded-lg overflow-hidden">
+                        <table className="divide-y mx-auto shadow-xl rounded-lg overflow-hidden max-w-full">
 
                             <thead className="bg-gray-100 rounded-lg">
                                 <tr>
