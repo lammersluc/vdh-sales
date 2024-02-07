@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
-import { HomeIcon } from "@heroicons/react/24/solid";
 
 export default function Page() {
 
@@ -65,11 +64,8 @@ export default function Page() {
     useEffect(() => {
         const checkAuth = () => {
             auth.onAuthStateChanged((user: any) => {
-                if (user) {
+                if (!user) return router.push("/account/login");
                 setIsUserValid(true);
-                } else {
-                router.push("/account/login");
-                }
             });
         };
 
@@ -77,8 +73,7 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex  min-h-screen justify-center items-center">
-            <HomeIcon onClick={() => router.push('/')} className="m-6 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
+        <main className="flex min-h-dvh justify-center items-center">
 
             <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 

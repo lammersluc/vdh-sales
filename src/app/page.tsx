@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase";
-import { HomeIcon } from "@heroicons/react/24/solid"
+import { Toaster } from "react-hot-toast";
+
+import { admins } from "@/utils";
 
 export default function Page() {
 
@@ -12,19 +14,18 @@ export default function Page() {
     const router = useRouter();
 
     const pages = [
-        { name: 'Verzenden', href: '/sales' },
+        { name: 'Verzenden', href: '/sales/send' },
         { name: 'Bekijken', href: '/sales/view' },
-        auth.currentUser?.uid === 'VDqFJNHGQueHOFjOXYoFpv4jPXG3' ? { name: 'Downloaden', href: '/sales/download' } : undefined
+        admins.find(a => a === auth.currentUser?.uid) ? { name: 'Downloaden', href: '/sales/download' } : undefined,
+        { name: 'Uitloggen', href: '/account/logout', className: 'mt-8 bg-red-500'}
     ];
 
     useEffect(() => {
         const checkAuth = () => {
             auth.onAuthStateChanged((user: any) => {
-                if (user) {
+                if (!user) return router.push("/account/login");
+                if (!user.displayName) return router.push("/account/username");
                 setIsUserValid(true);
-                } else {
-                router.push("/account/login");
-                }
             });
         };
 
@@ -32,10 +33,9 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex  min-h-screen justify-center items-center">
-            <HomeIcon onClick={() => router.push('/')} className="m-6 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
+        <main className="flex min-h-dvh justify-center items-center">
 
-            <div className="flex flex-col space-y-4 w-80">
+            <div className="flex flex-col w-80">
 
                 {
                     pages.map((page, index) => (
@@ -43,7 +43,7 @@ export default function Page() {
                         <button
                             key={index}
                             onClick={() => router.push(page.href)}
-                            className="p-2 bg-blue-500 shadow-xl text-white rounded-md"
+                            className={"p-2 my-2 bg-blue-500 shadow-xl text-white rounded-md " + page.className}
                         >
                             {page.name}
                         </button>
@@ -52,6 +52,7 @@ export default function Page() {
 
             </div>
             
+            <Toaster />
         </main>
     );
 

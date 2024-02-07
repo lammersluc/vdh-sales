@@ -1,5 +1,5 @@
 import { getApps, getApp, initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore, collection } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -12,9 +12,8 @@ const firebaseConfig = {
 
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const signIn = signInWithEmailAndPassword;
 
 const db = getFirestore(app);
 const sales = collection(db, "sales");
 
-export { app, auth, signIn, db, sales };
+export { app, auth, db, sales };

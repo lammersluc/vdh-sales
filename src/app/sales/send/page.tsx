@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { addDoc } from "firebase/firestore";
-import { FiHome } from "react-icons/fi";
 
 export default function Page() {
 
@@ -44,42 +43,40 @@ export default function Page() {
 
     const handleSumbit = async (e: any) => {
 
-      e.preventDefault();
+        e.preventDefault();
 
-      if (
-        !formData.bedrijfsnaam ||
-        !formData.locatie
-    ) return toast.error('Vul alle velden in');
+        if (
+            !formData.bedrijfsnaam ||
+            !formData.locatie
+        ) return toast.error('Vul alle velden in');
 
-      setStatus('Versturen...');
+        setStatus('Versturen...');
 
-      try {
+        try {
 
-        addDoc(sales, {
-          gebruiker: auth.currentUser?.email || 'Onbekend',
-          datum: Date.now(),
-          ...formData
-        });
+            addDoc(sales, {
+                ...formData,
+                gebruiker: auth.currentUser?.displayName || auth.currentUser?.email || 'Onbekend',
+                datum: Date.now()
+            });
 
-    } catch (error: any) {
-        return toast.error(error.message);
-    }
+        } catch (error: any) {
+            return toast.error(error.message);
+        }
 
-      const form = document.getElementById('form') as HTMLFormElement;
-      form.reset();
-      setStatus('Verstuurd');
-      toast.success('Verstuurd');
+        const form = document.getElementById('form') as HTMLFormElement;
+        form.reset();
+        setStatus('Verstuurd');
+        toast.success('Verstuurd');
 
     }
 
     useEffect(() => {
         const checkAuth = () => {
             auth.onAuthStateChanged((user: any) => {
-                if (user) {
+                if (!user) return router.push("/account/login");
+                if (!user.displayName) return router.push("/account/username");
                 setIsUserValid(true);
-                } else {
-                router.push("/account/login");
-                }
             });
         };
 
@@ -87,8 +84,7 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex  min-h-screen justify-center items-center">
-            <FiHome onClick={() => router.push('/')} className="m-3 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
+        <main className="flex min-h-dvh justify-center items-center">
 
             <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 

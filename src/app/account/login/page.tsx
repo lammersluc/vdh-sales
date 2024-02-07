@@ -2,9 +2,11 @@
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation"
-import { auth, signIn } from "@/utils/firebase";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
-import { HomeIcon } from "@heroicons/react/24/solid";
+
+import { auth } from "@/utils/firebase";
+import { FaGoogle } from "react-icons/fa6";
 
 export default function Page() {
 
@@ -20,28 +22,42 @@ export default function Page() {
     setFormData({ ...formData, [name]: value })
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     
     e.preventDefault();
 
-    signIn(auth, formData.email, formData.password).then(() => {
-      router.push("/");
+      try {
+
+        if (e.currentTarget.id === 'google') {
+
+          await signInWithPopup(auth, new GoogleAuthProvider());
+
+        } else {
+
+          await signInWithEmailAndPassword(auth, formData.email, formData.password);
+
+        }
+
+      } catch (error: any) { return toast.error(error.message) }
+
       toast.success('Succesvol ingelogd');
-    }).catch((error) => {
-      toast.error(error.message);
-    });
 
-  }
+      if (!auth.currentUser?.displayName) return router.push('/account/username');
 
-  return (
-    <main className="flex  min-h-screen justify-center items-center">
-        <HomeIcon onClick={() => router.push('/')} className="m-6 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
+      router.push('/');
 
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
+    }
+
+    return (
+
+    <main className="flex min-h-dvh justify-center items-center">
+
+        <form id="email" onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
 
             <input
                 name="email"
                 type="email"
+                required={true}
                 onChange={handleChange}
                 placeholder="Email"
                 className="my-2 p-2 w-full space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
@@ -50,6 +66,7 @@ export default function Page() {
             <input
                 name="password"
                 type="password"
+                required={true}
                 onChange={handleChange}
                 placeholder="Wachtwoord"
                 className="my-2 p-2 w-full space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
@@ -61,10 +78,19 @@ export default function Page() {
                 Login
             </button>
 
+            <div
+              id="google"
+              onClick={handleSubmit}
+              className="p-2 bg-blue-500 shadow-xl text-white rounded-md hover:cursor-pointer"
+            >
+              <FaGoogle className="h-6 mx-auto text-white" />
+            </div>
+
         </form>
       
         <Toaster containerStyle={{textAlign:'center'}}/>
 
     </main>
+
   );
 }
