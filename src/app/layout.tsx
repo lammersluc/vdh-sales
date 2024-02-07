@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { useRouter } from "next/navigation";
 
+const APP_URL = "http://localhost:3000";
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "VDH Sales";
 const APP_TITLE_TEMPLATE = "%s - PWA App";
 const APP_DESCRIPTION = "VDH Sales PWA App.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   applicationName: APP_NAME,
   title: {
     default: APP_DEFAULT_TITLE,

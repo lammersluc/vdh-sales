@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { auth, sales } from "@/utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
-import { FiHome } from "react-icons/fi";
+import { HomeIcon } from "@heroicons/react/24/solid";
 
 export default function Page() {
 
@@ -70,7 +70,7 @@ export default function Page() {
 
     if (isUserValid) return (
         <main className="flex min-h-screen justify-center items-center">
-            <FiHome onClick={() => router.push('/')} className="m-3 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
+            <HomeIcon onClick={() => router.push('/')} className="m-6 absolute top-0 left-0 w-14 h-auto text-blue-500 cursor-pointer"/>
 
             {
                 docs.length === 0 ? (
@@ -107,7 +107,7 @@ export default function Page() {
 
                     </form>
                 ) : (
-                    <div className="overflow-scroll p-10">
+                    <div className="overflow-auto p-8">
                     <table className="divide-y shadow-xl rounded-lg overflow-hidden">
                         <thead className="bg-gray-100 rounded-lg">
                             <tr>
