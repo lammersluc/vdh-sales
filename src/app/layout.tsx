@@ -13,6 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="shortcut icon" href="/images/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={inter.className}>

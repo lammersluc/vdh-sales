@@ -14,12 +14,18 @@
       "src": "/images/favicon-16x16.png",
       "sizes": "16x16",
       "type": "image/png"
+    },
+    {
+      "src": "/images/safari-pinned-tab.svg",
+      "type": "image/svg+xml",
+      "color": "#5bbad5"
     }
   ],
-  "name": "VDH Sales",
-  "short_name": "VDH Sales",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff"
+  "manifest": "/images/site.webmanifest",
+  "shortcutIcon": "/images/favicon.ico",
+  "appleMobileWebAppTitle": "VDH Sales",
+  "applicationName": "VDH Sales",
+  "msapplicationTileColor": "#2b5797",
+  "msapplicationConfig": "/images/browserconfig.xml",
+  "themeColor": "#ffffff"
 }
