@@ -86,7 +86,7 @@ export default function Page() {
             if (!navigator.geolocation) return;
             const watchId = navigator.geolocation.watchPosition((position) => setFormData({ ...formData, locatie: `${position.coords.latitude}, ${position.coords.longitude}` }));
     
-            return () => navigator.geolocation.clearWatch(watchId);
+            return navigator.geolocation.clearWatch(watchId);
         };
             
         checkAuth();
