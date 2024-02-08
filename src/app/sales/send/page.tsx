@@ -47,8 +47,6 @@ export default function Page() {
 
         e.preventDefault();
 
-        return console.log(formData.locatie);
-
         if (
             !formData.bedrijfsnaam ||
             !formData.locatie
@@ -86,19 +84,9 @@ export default function Page() {
 
         const checkGeolocation = () => {
             if (!navigator.geolocation) return;
-            navigator.geolocation.watchPosition(
-                (position) => {
-                    setFormData({ ...formData, locatie: `${position.coords.latitude}, ${position.coords.longitude}` });
-                },
-                (error) => {
-                    console.error("Error getting geolocation:", error);
-                    // Handle errors, if necessary
-                }
-            );
+            const watchId = navigator.geolocation.watchPosition((position) => setFormData({ ...formData, locatie: `${position.coords.latitude}, ${position.coords.longitude}` }));
     
-            // return () => {
-            //     navigator.geolocation.clearWatch(watchId);
-            // };
+            return () => navigator.geolocation.clearWatch(watchId);
         };
             
         checkAuth();
