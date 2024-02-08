@@ -68,7 +68,7 @@ export default function Page() {
                 bedrijfsnaam: formData.bedrijfsnaam.trim(),
                 locatie: formData.locatie.trim(),
                 subreden: formData.subreden.trim(),
-                gebruiker: auth.currentUser?.displayName,
+                gebruiker: auth.currentUser?.email,
                 datum: Date.now()
             });
 
@@ -87,7 +87,6 @@ export default function Page() {
         const checkAuth = () => {
             auth.onAuthStateChanged((user: any) => {
                 if (!user) return router.push("/account/login");
-                if (!user.displayName) return router.push("/account/username");
                 setIsUserValid(true);
             });
         };

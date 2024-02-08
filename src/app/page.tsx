@@ -24,7 +24,6 @@ export default function Page() {
         const checkAuth = () => {
             auth.onAuthStateChanged((user: any) => {
                 if (!user) return router.push("/account/login");
-                if (!user.displayName) return router.push("/account/username");
                 setIsUserValid(true);
             });
         };

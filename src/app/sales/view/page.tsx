@@ -53,10 +53,8 @@ export default function Page() {
             setUserOptions(o);
             setSelectedUsers(o);
         } else {
-            d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.displayName), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
+            d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
         }
-
-        console.log(d);
 
         if (d.length > 0) { 
             setDocs(d);
@@ -84,6 +82,14 @@ export default function Page() {
         }
 
     };
+
+    const formatUser = (user: string) => 
+        user.split('@')[0]
+            .replace(/^[a-z]|(?:\.[a-z])/g, (v) => v.toUpperCase())
+            .replace(/\./g, '. ')
+            .replace(/\b\w/g, (c) => c.toUpperCase())
+            .replace(/\.[a-z]/g, (v) => v.toUpperCase());
+
 
     useEffect(() => {
         const checkAuth = () => {
@@ -119,7 +125,7 @@ export default function Page() {
                                                 onChange={(e) => handleCheckboxChange(e, userOption)}
                                                 className="form-checkbox h-4 w-4 rounded-full bg-blue-500"
                                             />
-                                            <span className="ml-2">{userOption}</span>
+                                            <span className="ml-2">{formatUser(userOption)}</span>
                                         </div>
                                     ))}
                                 </div>

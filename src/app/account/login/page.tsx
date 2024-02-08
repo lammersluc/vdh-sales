@@ -43,8 +43,6 @@ export default function Page() {
 
       toast.success('Succesvol ingelogd');
 
-      if (!auth.currentUser?.displayName) return router.push('/account/username');
-
       router.push('/');
 
     }
