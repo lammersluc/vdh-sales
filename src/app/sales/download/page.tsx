@@ -2,9 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, sales } from "@/utils/firebase";
-import toast, { Toaster } from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
+import toast from "react-hot-toast";
+import { json2csv } from "json-2-csv";
+
+import { auth, sales } from "@/utils/firebase";
+import { Header, Footer } from "@/components";
 
 export default function Page() {
 
@@ -41,18 +44,19 @@ export default function Page() {
         const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
 
         try {
-                const jsonData = docs;
-                const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
-                const url = window.URL.createObjectURL(jsonBlob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'sales.json';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            } catch (error: any) {
-                toast.error(error.message);
-            }
+            const csv = json2csv(docs);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+                
+        } catch (error: any) {
+            toast.error(error.message);
+        }
         
         const form = document.getElementById('form') as HTMLFormElement;
         form.reset();
@@ -73,42 +77,44 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex min-h-dvh justify-center items-center">
+        <main className="flex flex-col h-dvh">
 
-            <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
+            <Header />
 
-                <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
+            <div className="flex flex-col h-full items-center justify-center">
+
+                <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
+
                     <input
                         name="begin"
                         type="date"
                         defaultValue={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
                         required={true}
                         onChange={handleChange}
-                        className="w-full h-full text-black p-2 bg-slate-100 focus:outline-none rounded-md text-center"
+                        className="text-black p-2 bg-slate-100 focus:outline-none rounded-md shadow-xl text-center"
                     />
-                </div>
 
-                <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
                     <input
                         name="eind"
                         type="date"
                         defaultValue={new Date().toISOString().split('T')[0]}
                         required={true}
                         onChange={handleChange}
-                        className="w-full h-full p-2 text-black bg-slate-100 focus:outline-none rounded-md text-center"
+                        className="p-2 text-black bg-slate-100 focus:outline-none rounded-md shadow-xl text-center"
                     />
-                </div>
 
-                <button
-                    type="submit"
-                    className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
-                >
-                    {status}
-                </button>
+                    <button
+                        type="submit"
+                        className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
+                    >
+                        {status}
+                    </button>
 
-            </form>
+                </form>
+
+            </div>
             
-            <Toaster containerStyle={{textAlign:'center'}}/>
+            <Footer />
 
         </main>
     );

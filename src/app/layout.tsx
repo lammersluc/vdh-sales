@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
-import Home from "./components/home";
-
-const APP_URL = "http://localhost:3000";
+const APP_URL = "https://vdh-sales.web.app/";
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "VDH Sales";
 const APP_TITLE_TEMPLATE = "%s - PWA App";
@@ -61,8 +60,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Home />
         {children}
+        <Toaster containerStyle={{textAlign:'center'}}/>
       </body>
     </html>
   );

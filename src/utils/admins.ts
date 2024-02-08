@@ -1,4 +1,4 @@
 export const admins = [
     'VDqFJNHGQueHOFjOXYoFpv4jPXG3',
-    'Q45iRGoPCFeCzDNRL2DHQ7oBSwn1'
+    'A7uVJ7MgKXRYBcQUJcm3ZNrAjFD3'
 ];

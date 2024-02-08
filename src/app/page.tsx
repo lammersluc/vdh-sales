@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase";
-import { Toaster } from "react-hot-toast";
 
 import { admins } from "@/utils";
+import { Header, Footer } from "@/components";
 
 export default function Page() {
 
@@ -33,26 +33,33 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex min-h-dvh justify-center items-center">
+        <main className="flex flex-col h-dvh">
 
-            <div className="flex flex-col w-80">
+            <Header />
 
-                {
-                    pages.map((page, index) => (
-                        page &&
-                        <button
-                            key={index}
-                            onClick={() => router.push(page.href)}
-                            className={"p-2 my-2 bg-blue-500 shadow-xl text-white rounded-md " + page.className}
-                        >
-                            {page.name}
-                        </button>
-                    ))
-                }
+            <div className="flex flex-col h-full items-center justify-center">
+
+                <div className="flex flex-col w-80 items-center justify-center">
+
+                    {
+                        pages.map((page, index) => (
+                            page &&
+                            <button
+                                key={index}
+                                onClick={() => router.push(page.href)}
+                                className={"p-2 my-2 w-full bg-blue-500 shadow-xl text-white rounded-md " + page.className}
+                            >
+                                {page.name}
+                            </button>
+                        ))
+                    }
+
+                </div>
 
             </div>
             
-            <Toaster />
+            <Footer />
+
         </main>
     );
 

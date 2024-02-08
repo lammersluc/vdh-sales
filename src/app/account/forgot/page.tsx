@@ -1,8 +1,8 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation"
-import { updateProfile } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 import toast from "react-hot-toast";
 
 import { auth } from "@/utils/firebase";
@@ -13,9 +13,8 @@ export default function Page() {
 
     const router = useRouter();
 
-    const [isUserValid, setIsUserValid] = useState(false);
     const [formData, setFormData] = useState({
-        displayname: ''
+        email: ''
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -27,37 +26,16 @@ export default function Page() {
         
         e.preventDefault();
 
-        if (!auth.currentUser) { 
+        try {
+            sendPasswordResetEmail(auth, formData.email);
+        } catch (error: any) { return toast.error(error.message) }
 
-            toast.error('Geen gebruiker gevonden');
-            return router.push('/account/login');
-
-        }
-
-        await updateProfile(auth.currentUser, {
-            displayName: formData.displayname
-        }).catch((error) => {
-            toast.error(error.message);
-        });
-
-        toast.success('Succesvol opgeslagen');
+        toast.success('Email verzonden');
         router.push('/');
 
     }
 
-    useEffect(() => {
-        const checkAuth = () => {
-            auth.onAuthStateChanged((user: any) => {
-                if (!user) return router.push("/account/login");
-                if (!user.displayName) return setIsUserValid(true);
-                router.push("/");
-            });
-        };
-
-        checkAuth();
-    }, []);
-
-    if (isUserValid) return (
+    return (
         <main className="flex flex-col h-dvh">
 
             <Header />
@@ -67,11 +45,11 @@ export default function Page() {
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
 
                     <input
-                        name="displayname"
-                        type="text"
+                        name="email"
+                        type="email"
                         required={true}
                         onChange={handleChange}
-                        placeholder="Voor- en achternaam"
+                        placeholder="Email"
                         className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
                     />
                 
@@ -79,7 +57,7 @@ export default function Page() {
                         type="submit"
                         className="p-2 bg-blue-500 shadow-xl text-white rounded-md"
                     >
-                        Opslaan
+                        Verstuur
                     </button>
 
                 </form>
