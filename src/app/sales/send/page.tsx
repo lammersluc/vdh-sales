@@ -41,6 +41,13 @@ export default function Page() {
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value === 'on' ? true : value === 'off' ? false : value })
+
+        if (value !== InUitWeb.uit) return;
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=18&addressdetails=1`)).json()).address
+            setFormData({ ...formData, locatie: address.city || address.town || address.village || '' });
+        });
     }
 
     const handleSumbit = async (e: any) => {
@@ -81,16 +88,8 @@ export default function Page() {
                 setIsUserValid(true);
             });
         };
-
-        const checkGeolocation = () => {
-            if (!navigator.geolocation) return;
-            const watchId = navigator.geolocation.watchPosition((position) => setFormData({ ...formData, locatie: `${position.coords.latitude}, ${position.coords.longitude}` }));
-    
-            return navigator.geolocation.clearWatch(watchId);
-        };
             
         checkAuth();
-        checkGeolocation();
     }, []);
 
     if (isUserValid) return (
@@ -102,6 +101,22 @@ export default function Page() {
 
                 <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 
+                    <div className="my-2 p-2 flex flex-col space-y-2 text-center">
+                        <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
+                        <div className="flex flex-col shadow-xl rounded-full">
+                        <select
+                            name="inuitweb"
+                            defaultValue={InUitWeb.in}
+                            onChange={handleChange}
+                            className="p-2 rounded-md focus:outline-none bg-slate-100 text-black"
+                        >
+                            <option value={InUitWeb.in}>In</option>
+                            <option value={InUitWeb.uit}>Uit</option>
+                            <option value={InUitWeb.web}>Web</option>
+                        </select>
+                        </div>
+                    </div>
+
                     <input
                         name="bedrijfsnaam"
                         type="text"
@@ -111,16 +126,14 @@ export default function Page() {
                         className="text-black p-2 my-2 bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
                     />
 
-                    { !formData.locatie &&
-                        <input
-                            name="locatie"
-                            type="text"
-                            required={true}
-                            onChange={handleChange}
-                            placeholder="Locatie"
-                            className="p-2 my-2 text-black bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
-                        />
-                    }
+                    <input
+                        name="locatie"
+                        type="text"
+                        required={true}
+                        onChange={handleChange}
+                        placeholder="Locatie"
+                        className="p-2 my-2 text-black bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
+                    />
 
                     <div className="my-2 p-2 space-y-2 text-center">
                         <label className="text-center" htmlFor="reden">Nieuw</label>
@@ -165,22 +178,6 @@ export default function Page() {
                                 <input type="checkbox" name="offerte" onChange={handleChange} className="sr-only peer"/>
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
                             </label>
-                        </div>
-                    </div>
-
-                    <div className="my-2 p-2 flex flex-col space-y-2 text-center">
-                        <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
-                        <div className="flex flex-col shadow-xl rounded-full">
-                        <select
-                            name="intuitweb"
-                            defaultValue={InUitWeb.in}
-                            onChange={handleChange}
-                            className="p-2 rounded-md focus:outline-none bg-slate-100 text-black"
-                        >
-                            <option value={InUitWeb.in}>In</option>
-                            <option value={InUitWeb.uit}>Uit</option>
-                            <option value={InUitWeb.web}>Web</option>
-                        </select>
                         </div>
                     </div>
 
