@@ -53,8 +53,10 @@ export default function Page() {
             setUserOptions(o);
             setSelectedUsers(o);
         } else {
-            d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.uid), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
+            d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.displayName), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
         }
+
+        console.log(d);
 
         if (d.length > 0) { 
             setDocs(d);
@@ -153,7 +155,7 @@ export default function Page() {
                             </thead>
 
                             <tbody className="flex flex-col h-[470px] overflow-y-auto">
-                                {docs.map((doc, i) => userOptions.length === 0 || selectedUsers.includes(doc.gebruiker) && (
+                                {docs.map((doc, i) => (userOptions.length === 0 || selectedUsers.includes(doc.gebruiker)) && (
                                     <tr key={i} className={`flex w-full ${i % 2 === 0 ? 'bg-slate-50' : 'bg-white'} `}>
                                         <td className="px-8 py-4 w-full whitespace-nowrap text-sm text-gray-900">{new Date(doc.datum).toLocaleDateString()}</td>
                                         <td className="px-8 py-4 w-full whitespace-nowrap text-sm text-gray-900">{doc.bedrijfsnaam}</td>
