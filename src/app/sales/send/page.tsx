@@ -44,8 +44,8 @@ export default function Page() {
 
         if (value !== InUitWeb.uit) return;
 
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=18&addressdetails=1`)).json()).address
+        navigator.geolocation.getCurrentPosition(async (p) => {
+            const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}&zoom=18&addressdetails=1`)).json()).address;
             setFormData({ ...formData, locatie: address.city || address.town || address.village || '' });
         });
     }
@@ -103,7 +103,7 @@ export default function Page() {
 
                     <div className="my-2 p-2 flex flex-col space-y-2 text-center">
                         <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
-                        <div className="flex flex-col shadow-xl rounded-full">
+                        <div className="flex flex-col shadow-xl rounded-md">
                         <select
                             name="inuitweb"
                             defaultValue={InUitWeb.in}
@@ -148,12 +148,12 @@ export default function Page() {
 
                     <div className="my-2 p-2 flex flex-col space-y-2 text-center">
                         <label className="text-center" htmlFor="reden">Reden</label>
-                        <div className="flex flex-col shadow-xl rounded-full">
+                        <div className="flex flex-col shadow-xl rounded-md">
                         <select
                             name="reden"
                             defaultValue={Reden.divers}
                             onChange={handleChange}
-                            className="p-2 focus:outline-none shadow-xl bg-slate-100 text-black"
+                            className="p-2 rounded-md focus:outline-none bg-slate-100 text-black"
                         >
                             <option value={Reden.divers}>Divers</option>
                             <option value={Reden.netwerk}>Netwerk</option>
@@ -163,7 +163,7 @@ export default function Page() {
                         </select>
                         </div>
                     </div>
-
+                    
                     <input
                         name="subreden"
                         type="text"

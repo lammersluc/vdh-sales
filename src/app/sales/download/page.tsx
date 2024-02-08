@@ -55,7 +55,7 @@ export default function Page() {
             document.body.removeChild(a);
                 
         } catch (error: any) {
-            toast.error(error.message);
+            return toast.error(error.message);
         }
         
         const form = document.getElementById('form') as HTMLFormElement;
@@ -85,23 +85,27 @@ export default function Page() {
 
                 <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 
-                    <input
-                        name="begin"
-                        type="date"
-                        defaultValue={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                        required={true}
-                        onChange={handleChange}
-                        className="text-black p-2 bg-slate-100 focus:outline-none rounded-md shadow-xl text-center"
-                    />
+                    <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
+                        <input
+                            name="begin"
+                            type="date"
+                            defaultValue={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                            required={true}
+                            onChange={handleChange}
+                            className="w-full h-full text-black p-2 bg-slate-100 focus:outline-none rounded-md text-center"
+                        />
+                    </div>
 
-                    <input
-                        name="eind"
-                        type="date"
-                        defaultValue={new Date().toISOString().split('T')[0]}
-                        required={true}
-                        onChange={handleChange}
-                        className="p-2 text-black bg-slate-100 focus:outline-none rounded-md shadow-xl text-center"
-                    />
+                    <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
+                        <input
+                            name="eind"
+                            type="date"
+                            defaultValue={new Date().toISOString().split('T')[0]}
+                            required={true}
+                            onChange={handleChange}
+                            className="w-full h-full p-2 text-black bg-slate-100 focus:outline-none rounded-md text-center"
+                        />
+                    </div>
 
                     <button
                         type="submit"
