@@ -35,7 +35,7 @@ export default function Page() {
         }
 
         await updateProfile(auth.currentUser, {
-            displayName: formData.displayname
+            displayName: formData.displayname.trim()
         }).catch((error) => {
             toast.error(error.message);
         });
@@ -49,8 +49,6 @@ export default function Page() {
         const checkAuth = () => {
             auth.onAuthStateChanged((user: any) => {
                 if (!user) return router.push("/account/login");
-                if (!user.displayName) return setIsUserValid(true);
-                router.push("/");
             });
         };
 

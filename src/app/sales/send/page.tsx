@@ -65,7 +65,10 @@ export default function Page() {
 
             addDoc(sales, {
                 ...formData,
-                gebruiker: auth.currentUser?.displayName || auth.currentUser?.email || 'Onbekend',
+                bedrijfsnaam: formData.bedrijfsnaam.trim(),
+                locatie: formData.locatie.trim(),
+                subreden: formData.subreden.trim(),
+                gebruiker: auth.currentUser?.displayName,
                 datum: Date.now()
             });
 
