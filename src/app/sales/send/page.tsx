@@ -130,6 +130,7 @@ export default function Page() {
                         name="locatie"
                         type="text"
                         required={true}
+                        value={formData.locatie}
                         onChange={handleChange}
                         placeholder="Locatie"
                         className="p-2 my-2 text-black bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"

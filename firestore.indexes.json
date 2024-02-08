@@ -1,4 +1,19 @@
 {
-  "indexes": [],
+  "indexes": [
+      {
+        "collectionGroup": "sales",
+        "queryScope": "COLLECTION",
+        "fields": [
+          {
+            "fieldPath": "gebruiker",
+            "order": "ASCENDING"
+          },
+          {
+            "fieldPath": "datum",
+            "order": "ASCENDING"
+          }
+        ]
+      }
+    ],
   "fieldOverrides": []
 }
