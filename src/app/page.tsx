@@ -30,34 +30,28 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex flex-col h-dvh">
 
-            <Header />
+        <div className="flex flex-col h-full p-4 justify-center m-auto">
 
-            <div className="flex flex-col h-full p-4 justify-center m-auto">
+            <div className="flex flex-col w-80 items-center justify-center">
 
-                <div className="flex flex-col w-80 items-center justify-center">
-
-                    {
-                        pages.map((page, index) => (
-                            page &&
-                            <button
-                                key={index}
-                                onClick={() => router.push(page.href)}
-                                className={"p-2 my-2 w-full bg-blue-500 shadow-xl text-white rounded-md " + page.className}
-                            >
-                                {page.name}
-                            </button>
-                        ))
-                    }
-
-                </div>
+                {
+                    pages.map((page, index) => (
+                        page &&
+                        <button
+                            key={index}
+                            onClick={() => router.push(page.href)}
+                            className={"p-2 my-2 w-full bg-blue-500 shadow-xl text-white rounded-md " + page.className}
+                        >
+                            {page.name}
+                        </button>
+                    ))
+                }
 
             </div>
-            
-            <Footer />
 
-        </main>
+        </div>
+            
     );
 
 }

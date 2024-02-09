@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
+import { Footer, Header } from "@/components";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +16,13 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={inter.className}>
-        {children}
-        <Toaster position="bottom-center"/>
+        <div className="flex flex-col h-dvh">
+          <Header />
+          <main className="flex flex-col h-full">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

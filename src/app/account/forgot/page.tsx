@@ -30,7 +30,7 @@ export default function Page() {
 
             try {
                 await sendPasswordResetEmail(auth, formData.email);
-            } catch (error: any) { return reject(error.message) }
+            } catch (error: any) { return reject('Ongeldige email') }
 
             resolve(router.push('/'));
 
@@ -45,36 +45,30 @@ export default function Page() {
     }
 
     return (
-        <main className="flex flex-col h-dvh">
 
-            <Header />
+        <div className="flex flex-col h-full p-4 justify-center m-auto">
+            
+            <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
 
-            <div className="flex flex-col h-full p-4 justify-center m-auto">
-                
-                <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
+                <input
+                    name="email"
+                    type="email"
+                    required={true}
+                    onChange={handleChange}
+                    placeholder="Email"
+                    className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
+                />
+            
+                <button
+                    type="submit"
+                    className="p-2 bg-blue-500 shadow-xl text-white rounded-md"
+                >
+                    Verstuur
+                </button>
 
-                    <input
-                        name="email"
-                        type="email"
-                        required={true}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
-                    />
-                
-                    <button
-                        type="submit"
-                        className="p-2 bg-blue-500 shadow-xl text-white rounded-md"
-                    >
-                        Verstuur
-                    </button>
+            </form>
 
-                </form>
+        </div>
 
-            </div>
-        
-            <Footer />
-
-        </main>
     );
 }

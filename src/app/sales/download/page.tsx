@@ -51,7 +51,7 @@ export default function Page() {
                 a.click();
                 document.body.removeChild(a);
                     
-            } catch (error: any) { return reject(error.message); }
+            } catch (error: any) { return reject('Er ging iets mis...'); }
 
             resolve(e.target.reset());
 
@@ -77,50 +77,44 @@ export default function Page() {
     }, []);
 
     if (isUserValid) return (
-        <main className="flex flex-col h-dvh">
 
-            <Header />
+        <div className="flex flex-col h-full p-4 justify-center m-auto">
 
-            <div className="flex flex-col h-full p-4 justify-center m-auto">
+            <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 
-                <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
+                <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
+                    <input
+                        name="begin"
+                        type="date"
+                        defaultValue={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                        required={true}
+                        onChange={handleChange}
+                        className="w-full h-full text-black p-2 bg-slate-100 focus:outline-none rounded-md text-center"
+                    />
+                </div>
 
-                    <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
-                        <input
-                            name="begin"
-                            type="date"
-                            defaultValue={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                            required={true}
-                            onChange={handleChange}
-                            className="w-full h-full text-black p-2 bg-slate-100 focus:outline-none rounded-md text-center"
-                        />
-                    </div>
+                <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
+                    <input
+                        name="eind"
+                        type="date"
+                        defaultValue={new Date().toISOString().split('T')[0]}
+                        required={true}
+                        onChange={handleChange}
+                        className="w-full h-full p-2 text-black bg-slate-100 focus:outline-none rounded-md text-center"
+                    />
+                </div>
 
-                    <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
-                        <input
-                            name="eind"
-                            type="date"
-                            defaultValue={new Date().toISOString().split('T')[0]}
-                            required={true}
-                            onChange={handleChange}
-                            className="w-full h-full p-2 text-black bg-slate-100 focus:outline-none rounded-md text-center"
-                        />
-                    </div>
+                <button
+                    type="submit"
+                    className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
+                >
+                    Download
+                </button>
 
-                    <button
-                        type="submit"
-                        className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
-                    >
-                        Download
-                    </button>
+            </form>
 
-                </form>
-
-            </div>
-            
-            <Footer />
-
-        </main>
+        </div>
+        
     );
 
 }
