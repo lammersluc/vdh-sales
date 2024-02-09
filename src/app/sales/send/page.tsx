@@ -41,11 +41,11 @@ export default function Page() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value === 'on' ? true : value === 'off' ? false : value })
 
-        if (value !== InUitWeb.uit) return;
+        if (value !== InUitWeb.uit || e.target.form.locatie.value) return;
 
         navigator.geolocation.getCurrentPosition(async (p) => {
             const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}&zoom=18&addressdetails=1`)).json()).address;
-            if (!e.target.form.locatie.value) e.target.form.locatie.value = address.city || address.town || address.village || '';
+            e.target.form.locatie.value = address.city || address.town || address.village || '';
         });
     }
 
