@@ -6,8 +6,6 @@ import { auth, sales } from "@/utils/firebase";
 import toast from "react-hot-toast";
 import { addDoc } from "firebase/firestore";
 
-import { Header, Footer } from "@/components";
-
 export default function Page() {
 
     enum Reden {

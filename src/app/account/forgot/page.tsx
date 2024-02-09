@@ -6,7 +6,6 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import toast from "react-hot-toast";
 
 import { auth } from "@/utils/firebase";
-import { Header, Footer } from "@/components";
 
 export default function Page() {
 

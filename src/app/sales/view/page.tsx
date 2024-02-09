@@ -6,8 +6,6 @@ import { auth, sales } from "@/utils/firebase";
 import toast from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
 
-import { Header, Footer } from "@/components";
-
 export default function Page() {
 
     const router = useRouter();

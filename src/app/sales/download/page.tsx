@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { json2csv } from "json-2-csv";
 
 import { auth, sales } from "@/utils/firebase";
-import { Header, Footer } from "@/components";
 
 export default function Page() {
 
