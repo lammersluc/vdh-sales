@@ -4,15 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase";
 
-import { Header, Footer } from "@/components";
-
 export default function Page() {
 
     const pages = [
-        { name: 'Verzenden', href: '/sales/send' },
-        { name: 'Bekijken', href: '/sales/view' },
-        typeof localStorage !== 'undefined' && localStorage.getItem('user') === 'admin' && { name: 'Downloaden', href: '/sales/download' },
-        { name: 'Uitloggen', href: '/account/logout', className: 'mt-8 bg-red-500'}
+        { name: 'Verzenden', onClick: (e: any) => { e.preventDefault(); router.push('/sales/send') }},
+        { name: 'Bekijken', onClick: (e: any) => { e.preventDefault(); router.push('/sales/view') } },
+        typeof localStorage !== 'undefined' && localStorage.getItem('user') === 'admin' && { name: 'Downloaden', onClick: (e: any) => { e.preventDefault(); router.push('/sales/download') } },
+        { name: 'Uitloggen', onClick: (e: any) => { e.preventDefault(); auth.signOut() }, className: 'mt-8 bg-red-500'}
     ];
     const [isUserValid, setIsUserValid] = useState(false);
 
@@ -40,7 +38,7 @@ export default function Page() {
                         page &&
                         <button
                             key={index}
-                            onClick={() => router.push(page.href)}
+                            onClick={page.onClick}
                             className={"p-2 my-2 w-full bg-blue-500 shadow-xl text-white rounded-md " + page.className}
                         >
                             {page.name}

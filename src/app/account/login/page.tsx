@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation"
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import toast from "react-hot-toast";
@@ -17,12 +17,12 @@ export default function Page() {
         password: ''
     });
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value })
     }
 
-    const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = async (e: any) => {
     
         e.preventDefault();
 
