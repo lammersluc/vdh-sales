@@ -39,7 +39,7 @@ export default function Page() {
 
             const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
 
-            if (docs.length === 0) return reject('Geen data gevonden');
+            if (!docs.length) return reject('Geen data gevonden');
 
                 const csv = json2csv(docs);
                 const blob = new Blob([csv], { type: 'text/csv' });
@@ -52,9 +52,8 @@ export default function Page() {
                 document.body.removeChild(a);
                     
             } catch (error: any) { return reject(error.message); }
-            
-            const form = document.getElementById('form') as HTMLFormElement;
-            resolve(form.reset());
+
+            resolve(e.target.reset());
 
         });
 

@@ -51,17 +51,14 @@ export default function Page() {
                     d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
                 }
 
-                if (d.length > 0) { 
-                    setDocs(d);
-                    setVisible(true);
-                } else {
-                    return reject('Geen data gevonden');
-                }
+                if (!d.length) return reject('Geen data gevonden');
+                
+                setDocs(d);
+                setVisible(true);
                 
             } catch (error: any) { return reject(error.message); }
 
-            const form = document.getElementById('form') as HTMLFormElement;
-            resolve(form.reset());
+            resolve(e.target.reset());
 
         });
 

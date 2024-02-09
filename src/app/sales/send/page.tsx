@@ -62,14 +62,13 @@ export default function Page() {
                     bedrijfsnaam: formData.bedrijfsnaam.trim(),
                     locatie: formData.locatie.trim(),
                     subreden: formData.subreden.trim(),
-                    gebruiker: auth.currentUser?.email,
+                    gebruiker: auth.currentUser?.email || 'onbekend',
                     datum: Date.now()
                 });
 
             } catch (error: any) { return reject(error.message); }
 
-            const form = document.getElementById('form') as HTMLFormElement;
-            resolve(form.reset());
+            resolve(e.target.reset());
 
         });
 
