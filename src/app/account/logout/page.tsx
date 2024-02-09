@@ -4,14 +4,12 @@ import { useRouter } from "next/navigation";
 
 import { auth } from "@/utils/firebase";
 
-export default function Page() {
+export default async function Page() {
 
     const router = useRouter();
 
-    auth.signOut().then(() => {
-        router.push("/account/login");
-    });
+    await auth.signOut();
     
-    return null;
+    router.push("/account/login");
     
 }

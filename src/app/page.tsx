@@ -8,12 +8,12 @@ import { Header, Footer } from "@/components";
 
 export default function Page() {
 
-    const [pages, setPages] = useState([
+    const pages = [
         { name: 'Verzenden', href: '/sales/send' },
         { name: 'Bekijken', href: '/sales/view' },
         typeof localStorage !== 'undefined' && localStorage.getItem('user') === 'admin' && { name: 'Downloaden', href: '/sales/download' },
         { name: 'Uitloggen', href: '/account/logout', className: 'mt-8 bg-red-500'}
-    ]);
+    ];
     const [isUserValid, setIsUserValid] = useState(false);
 
     const router = useRouter();
