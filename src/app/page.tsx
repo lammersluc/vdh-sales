@@ -4,21 +4,19 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase";
 
-import { admins } from "@/utils";
 import { Header, Footer } from "@/components";
 
 export default function Page() {
 
+    const [pages, setPages] = useState([
+        { name: 'Verzenden', href: '/sales/send' },
+        { name: 'Bekijken', href: '/sales/view' },
+        typeof localStorage !== 'undefined' && localStorage.getItem('user') === 'admin' && { name: 'Downloaden', href: '/sales/download' },
+        { name: 'Uitloggen', href: '/account/logout', className: 'mt-8 bg-red-500'}
+    ]);
     const [isUserValid, setIsUserValid] = useState(false);
 
     const router = useRouter();
-
-    const pages = [
-        { name: 'Verzenden', href: '/sales/send' },
-        { name: 'Bekijken', href: '/sales/view' },
-        admins.find(a => a === auth.currentUser?.uid) ? { name: 'Downloaden', href: '/sales/download' } : undefined,
-        { name: 'Uitloggen', href: '/account/logout', className: 'mt-8 bg-red-500'}
-    ];
 
     useEffect(() => {
         const checkAuth = () => {
@@ -36,7 +34,7 @@ export default function Page() {
 
             <Header />
 
-            <div className="flex flex-col h-full items-center justify-center">
+            <div className="flex flex-col h-full justify-center p-4 m-auto">
 
                 <div className="flex flex-col w-80 items-center justify-center">
 

@@ -6,7 +6,6 @@ import { auth, sales } from "@/utils/firebase";
 import toast from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
 
-import { admins } from "@/utils";
 import { Header, Footer } from "@/components";
 
 export default function Page() {
@@ -47,7 +46,7 @@ export default function Page() {
 
         let d;
         
-        if (admins.find(a => a === auth.currentUser?.uid)) {
+        if (localStorage.getItem('admin')) {
             d = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
             const o = Array.from(new Set(d.map(doc => doc.gebruiker)));
             setUserOptions(o);
@@ -107,7 +106,7 @@ export default function Page() {
 
             <Header />
             
-            <div className="flex flex-col h-full items-center justify-center">
+            <div className="flex flex-col h-full justify-center p-4 m-auto">
             {
                 visible ? (
 

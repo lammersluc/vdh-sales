@@ -43,6 +43,11 @@ export default function Page() {
 
         const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
 
+        if (docs.length === 0) {
+            setStatus('Download');
+            return toast.error('Geen data gevonden');
+        }
+
         try {
             const csv = json2csv(docs);
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -81,7 +86,7 @@ export default function Page() {
 
             <Header />
 
-            <div className="flex flex-col h-full items-center justify-center">
+            <div className="flex flex-col h-full justify-center p-4 m-auto">
 
                 <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 

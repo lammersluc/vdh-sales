@@ -53,7 +53,7 @@ export default function Page() {
 
       <Header />
 
-      <div className="flex flex-col h-full items-center justify-center">
+      <div className="flex flex-col h-full justify-center p-4 m-auto">
 
         <form id="email" onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
 
