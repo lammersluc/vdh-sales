@@ -11,39 +11,47 @@ import { Header, Footer } from "@/components";
 
 export default function Page() {
 
-const router = useRouter();
+    const router = useRouter();
 
-const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-});
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
 
-const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value })
-}
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value })
+    }
 
-const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
     
-    e.preventDefault();
+        e.preventDefault();
 
-    try {
+        const promise = new Promise(async (resolve, reject) => {
 
-        if (e.currentTarget.id === 'google') {
+            try {
 
-        await signInWithPopup(auth, new GoogleAuthProvider());
+                if (e.currentTarget.id === 'google') {
 
-        } else {
+                await signInWithPopup(auth, new GoogleAuthProvider());
 
-        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+                } else {
 
-        }
+                await signInWithEmailAndPassword(auth, formData.email, formData.password);
 
-    } catch (error: any) { return toast.error(error.message) }
+                }
 
-    toast.success('Succesvol ingelogd');
+            } catch (error: any) { return reject(error.message) }
 
-    router.push('/');
+            resolve(router.push('/'));
+
+        });
+
+        toast.promise(promise, {
+            loading: 'Inloggen...',
+            success: 'Ingelogd',
+            error: (error) => error
+        });
 
     }
 

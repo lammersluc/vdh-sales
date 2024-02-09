@@ -26,12 +26,21 @@ export default function Page() {
         
         e.preventDefault();
 
-        try {
-            sendPasswordResetEmail(auth, formData.email);
-        } catch (error: any) { return toast.error(error.message) }
+        const promise = new Promise(async (resolve, reject) => {
 
-        toast.success('Email verzonden');
-        router.push('/');
+            try {
+                await sendPasswordResetEmail(auth, formData.email);
+            } catch (error: any) { return reject(error.message) }
+
+            resolve(router.push('/'));
+
+        });
+
+        toast.promise(promise, {
+            loading: 'Email verzenden...',
+            success: 'Email verzonden',
+            error: (error) => error
+        });
 
     }
 

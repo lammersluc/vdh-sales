@@ -26,7 +26,6 @@ export default function Page() {
 
     const router = useRouter();
 
-    const [status, setStatus] = useState('Verstuur');
     const [isUserValid, setIsUserValid] = useState(false);
     const [formData, setFormData] = useState({
       bedrijfsnaam: '',
@@ -46,7 +45,7 @@ export default function Page() {
 
         navigator.geolocation.getCurrentPosition(async (p) => {
             const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}&zoom=18&addressdetails=1`)).json()).address;
-            setFormData({ ...formData, locatie: address.city || address.town || address.village || '' });
+            if (!e.target.form.locatie.value) e.target.form.locatie.value = address.city || address.town || address.village || '';
         });
     }
 
@@ -54,32 +53,31 @@ export default function Page() {
 
         e.preventDefault();
 
-        if (
-            !formData.bedrijfsnaam ||
-            !formData.locatie
-        ) return toast.error('Vul alle velden in');
+        const promise = new Promise(async (resolve, reject) => {
 
-        setStatus('Versturen...');
+            try {
 
-        try {
+                addDoc(sales, {
+                    ...formData,
+                    bedrijfsnaam: formData.bedrijfsnaam.trim(),
+                    locatie: formData.locatie.trim(),
+                    subreden: formData.subreden.trim(),
+                    gebruiker: auth.currentUser?.email,
+                    datum: Date.now()
+                });
 
-            addDoc(sales, {
-                ...formData,
-                bedrijfsnaam: formData.bedrijfsnaam.trim(),
-                locatie: formData.locatie.trim(),
-                subreden: formData.subreden.trim(),
-                gebruiker: auth.currentUser?.email,
-                datum: Date.now()
-            });
+            } catch (error: any) { return reject(error.message); }
 
-        } catch (error: any) {
-            return toast.error(error.message);
-        }
+            const form = document.getElementById('form') as HTMLFormElement;
+            resolve(form.reset());
 
-        const form = document.getElementById('form') as HTMLFormElement;
-        form.reset();
-        setStatus('Verstuurd');
-        toast.success('Verstuurd');
+        });
+
+        toast.promise(promise, {
+            loading: 'Versturen...',
+            success: 'Verstuurd',
+            error: (error) => error
+        });
 
     }
 
@@ -132,7 +130,6 @@ export default function Page() {
                         name="locatie"
                         type="text"
                         required={true}
-                        value={formData.locatie}
                         onChange={handleChange}
                         placeholder="Locatie"
                         className="p-2 my-2 text-black bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
@@ -188,7 +185,7 @@ export default function Page() {
                         type="submit"
                         className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
                     >
-                        {status}
+                        Verstuur
                     </button>
 
                 </form>

@@ -16,7 +16,6 @@ export default function Page() {
     const [userOptions, setUserOptions] = useState([] as any[]);
     const [selectedUsers, setSelectedUsers] = useState([] as any[]);
     const [docs, setDocs] = useState([] as any[])
-    const [status, setStatus] = useState('Bekijk');
     const [isUserValid, setIsUserValid] = useState(false);
     const [formData, setFormData] = useState({
         begin: Date.now() - 7 * 24 * 60 * 60 * 1000,
@@ -32,41 +31,45 @@ export default function Page() {
 
         e.preventDefault();
 
-        if (
-            !formData.begin ||
-            !formData.eind
-        ) return toast.error('Vul alle velden in');
+        const promise = new Promise(async (resolve, reject) => {
 
-        const begin = new Date(formData.begin).getTime();
-        const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
-        
-        if (begin > eind) return toast.error('Einddatum moet na begindatum zijn');
+            const begin = new Date(formData.begin).getTime();
+            const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
+            
+            if (begin > eind) return reject('Einddatum moet na begindatum zijn');
 
-        setStatus('Laden...');
+            try {
 
-        let d;
-        
-        if (localStorage.getItem('user') === 'admin') {
-            d = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
-            const o = Array.from(new Set(d.map(doc => doc.gebruiker)));
-            setUserOptions(o);
-            setSelectedUsers(o);
-        } else {
-            d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
-        }
+                let d;
+                
+                if (localStorage.getItem('user') === 'admin') {
+                    d = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
+                    const o = Array.from(new Set(d.map(doc => doc.gebruiker)));
+                    setUserOptions(o);
+                    setSelectedUsers(o);
+                } else {
+                    d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
+                }
 
-        if (d.length > 0) { 
-            setDocs(d);
-            setVisible(true);
-        } else {
-            setStatus('Bekijk');
-            return toast.error('Geen data gevonden');
-        }
+                if (d.length > 0) { 
+                    setDocs(d);
+                    setVisible(true);
+                } else {
+                    return reject('Geen data gevonden');
+                }
+                
+            } catch (error: any) { return reject(error.message); }
 
-        const form = document.getElementById('form') as HTMLFormElement;
-        form.reset();
-        setStatus('Bekijk');
-        toast.success('Successvol geladen');
+            const form = document.getElementById('form') as HTMLFormElement;
+            resolve(form.reset());
+
+        });
+
+        toast.promise(promise, {
+            loading: 'Downloaden...',
+            success: 'Gedownload',
+            error: (error) => error
+        });
 
     }
 
@@ -207,7 +210,7 @@ export default function Page() {
                             type="submit"
                             className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
                         >
-                            {status}
+                            Bekijk
                         </button>
 
                     </form>

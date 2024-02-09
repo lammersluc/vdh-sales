@@ -13,7 +13,6 @@ export default function Page() {
 
     const router = useRouter();
 
-    const [status, setStatus] = useState('Download');
     const [isUserValid, setIsUserValid] = useState(false);
     const [formData, setFormData] = useState({
         begin: Date.now() - 7 * 24 * 60 * 60 * 1000,
@@ -29,44 +28,41 @@ export default function Page() {
 
         e.preventDefault();
 
-        if (
-            !formData.begin ||
-            !formData.eind
-        ) return toast.error('Vul alle velden in');
+        const promise = new Promise(async (resolve, reject) => {
 
-        const begin = new Date(formData.begin).getTime();
-        const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
-        
-        if (begin > eind) return toast.error('Einddatum moet na begindatum zijn');
+            const begin = new Date(formData.begin).getTime();
+            const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
+            
+            if (begin > eind) return reject('Einddatum moet na begindatum zijn');
 
-        setStatus('Downloaden...');
+            try {
 
-        const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
+            const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
 
-        if (docs.length === 0) {
-            setStatus('Download');
-            return toast.error('Geen data gevonden');
-        }
+            if (docs.length === 0) return reject('Geen data gevonden');
 
-        try {
-            const csv = json2csv(docs);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'data.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-                
-        } catch (error: any) {
-            return toast.error(error.message);
-        }
-        
-        const form = document.getElementById('form') as HTMLFormElement;
-        form.reset();
-        setStatus('Download');
-        toast.success('Bestand gedownload');
+                const csv = json2csv(docs);
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                    
+            } catch (error: any) { return reject(error.message); }
+            
+            const form = document.getElementById('form') as HTMLFormElement;
+            resolve(form.reset());
+
+        });
+
+        toast.promise(promise, {
+            loading: 'Downloaden...',
+            success: 'Gedownload',
+            error: (error) => error
+        });
 
     }
 
@@ -116,7 +112,7 @@ export default function Page() {
                         type="submit"
                         className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
                     >
-                        {status}
+                        Download
                     </button>
 
                 </form>
