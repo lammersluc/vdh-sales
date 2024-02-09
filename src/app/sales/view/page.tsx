@@ -66,8 +66,8 @@ export default function Page() {
         });
 
         toast.promise(promise, {
-            loading: 'Downloaden...',
-            success: 'Gedownload',
+            loading: 'Laden...',
+            success: 'Data geladen',
             error: (error) => error
         });
 

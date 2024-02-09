@@ -60,7 +60,7 @@ export default function Page() {
 
         toast.promise(promise, {
             loading: 'Downloaden...',
-            success: 'Gedownload',
+            success: 'Data gedownload',
             error: (error) => error
         });
 
