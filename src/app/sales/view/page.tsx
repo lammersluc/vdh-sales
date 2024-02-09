@@ -46,7 +46,7 @@ export default function Page() {
 
         let d;
         
-        if (localStorage.getItem('admin')) {
+        if (localStorage.getItem('user') === 'admin') {
             d = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
             const o = Array.from(new Set(d.map(doc => doc.gebruiker)));
             setUserOptions(o);
