@@ -11,98 +11,98 @@ import { Header, Footer } from "@/components";
 
 export default function Page() {
 
-  const router = useRouter();
+const router = useRouter();
 
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     email: '',
     password: ''
-  });
+});
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value })
-  }
+}
 
-  const handleSubmit = async (e: FormEvent) => {
+const handleSubmit = async (e: FormEvent) => {
     
     e.preventDefault();
 
-      try {
+    try {
 
         if (e.currentTarget.id === 'google') {
 
-          await signInWithPopup(auth, new GoogleAuthProvider());
+        await signInWithPopup(auth, new GoogleAuthProvider());
 
         } else {
 
-          await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
 
         }
 
-      } catch (error: any) { return toast.error(error.message) }
+    } catch (error: any) { return toast.error(error.message) }
 
-      toast.success('Succesvol ingelogd');
+    toast.success('Succesvol ingelogd');
 
-      router.push('/');
+    router.push('/');
 
     }
 
     return (
 
-    <main className="flex flex-col h-dvh">
+        <main className="flex flex-col h-dvh">
 
-      <Header />
+            <Header />
 
-      <div className="flex flex-col h-full justify-center p-4 m-auto">
+            <div className="flex flex-col h-full p-4 justify-center m-auto">
 
-        <form id="email" onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
+                <form id="email" onSubmit={handleSubmit} className="flex flex-col space-y-4 w-80">
 
-          <input
-              name="email"
-              type="email"
-              required={true}
-              onChange={handleChange}
-              placeholder="Email"
-              className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
-          />
+                <input
+                    name="email"
+                    type="email"
+                    required={true}
+                    onChange={handleChange}
+                    placeholder="Email"
+                    className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
+                />
 
-          <input
-              name="password"
-              type="password"
-              required={true}
-              onChange={handleChange}
-              placeholder="Wachtwoord"
-              className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
-          />
+                <input
+                    name="password"
+                    type="password"
+                    required={true}
+                    onChange={handleChange}
+                    placeholder="Wachtwoord"
+                    className="my-2 p-2 space-y-2 bg-slate-100 shadow-xl rounded-md text-center focus:outline-none"
+                />
 
-          <p
-            onClick={() => router.push('/account/forgot')}
-            className="text-blue-500 text-center hover:cursor-pointer">
-              Wachtwoord vergeten?
-            </p>
+                <p
+                    onClick={() => router.push('/account/forgot')}
+                    className="text-blue-500 text-center hover:cursor-pointer">
+                    Wachtwoord vergeten?
+                    </p>
 
-          <button
-              type="submit"
-              className="p-2 bg-blue-500 shadow-xl text-white rounded-md"
-          >
-              Login
-          </button>
+                <button
+                    type="submit"
+                    className="p-2 bg-blue-500 shadow-xl text-white rounded-md"
+                >
+                    Login
+                </button>
 
-          <div
-            id="google"
-            onClick={handleSubmit}
-            className="p-2 bg-blue-500 shadow-xl text-white rounded-md hover:cursor-pointer"
-          >
-            <FaGoogle className="h-6 mx-auto text-white" />
-          </div>
+                <div
+                    id="google"
+                    onClick={handleSubmit}
+                    className="p-2 bg-blue-500 shadow-xl text-white rounded-md hover:cursor-pointer"
+                >
+                    <FaGoogle className="h-6 mx-auto text-white" />
+                </div>
 
-        </form>
+                </form>
 
-      </div>
-      
-      <Footer />
-      
-    </main>
+            </div>
+            
+            <Footer />
+        
+        </main>
 
-  );
+    );
 }

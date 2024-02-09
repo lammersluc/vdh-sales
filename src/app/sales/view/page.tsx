@@ -106,7 +106,7 @@ export default function Page() {
 
             <Header />
             
-            <div className="flex flex-col h-full justify-center p-4 m-auto">
+            <div className="flex flex-col h-full p-4 justify-center m-auto">
             {
                 visible ? (
 
