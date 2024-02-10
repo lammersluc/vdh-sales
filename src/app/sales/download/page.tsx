@@ -6,7 +6,7 @@ import { getDocs, query, where } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { json2csv } from "json-2-csv";
 
-import { auth, sales } from "@/utils/firebase";
+import { auth, sales } from "@/utils";
 
 export default function Page() {
 

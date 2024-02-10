@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, sales } from "@/utils/firebase";
 import toast from "react-hot-toast";
 import { addDoc } from "firebase/firestore";
+
+import { auth, sales } from "@/utils";
 
 export default function Page() {
 

@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import toast from "react-hot-toast";
+import { FaGoogle } from "react-icons/fa6";
 
 import { auth } from "@/utils";
-import { FaGoogle } from "react-icons/fa6";
 
 export default function Page() {
 

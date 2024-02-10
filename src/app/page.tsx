@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/utils/firebase";
+import { auth } from "@/utils";
 
 export default function Page() {
 

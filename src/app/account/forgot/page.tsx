@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { sendPasswordResetEmail } from "firebase/auth";
 import toast from "react-hot-toast";
 
-import { auth } from "@/utils/firebase";
+import { auth } from "@/utils";
 
 export default function Page() {
 
