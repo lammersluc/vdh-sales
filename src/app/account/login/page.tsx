@@ -73,9 +73,10 @@ export default function Page() {
 
             <p
                 onClick={() => router.push('/account/forgot')}
-                className="text-blue-500 text-center hover:cursor-pointer">
+                className="text-blue-500 text-center hover:cursor-pointer"
+            >
                 Wachtwoord vergeten?
-                </p>
+            </p>
 
             <button
                 type="submit"
