@@ -112,16 +112,15 @@ export default function Page() {
                         userOptions.length > 0 && (
                             <div className="mb-6 w-full mx-auto flex flex-row flex-wrap justify-evenly space-x-2 space-y-2">
                                 {userOptions.map((userOption, index) => (
-                                    <div key={index} className="inline-flex items-center">
+                                    <label key={index} className="inline-flex shadow-xl items-center justify-center px-3 py-1 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                         <input
                                             type="checkbox"
                                             value={userOption}
                                             checked={selectedUsers.includes(userOption)}
                                             onChange={(e) => handleCheckboxChange(e, userOption)}
-                                            className="form-checkbox h-4 w-4 rounded-full bg-blue-500"
-                                        />
+                                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
                                         <span className="ml-2">{formatUser(userOption)}</span>
-                                    </div>
+                                    </label>
                                 ))}
                             </div>
                         )

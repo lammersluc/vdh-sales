@@ -45,6 +45,7 @@ export default function Page() {
         navigator.geolocation.getCurrentPosition(async (p) => {
             const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}&zoom=18&addressdetails=1`)).json()).address;
             e.target.form.locatie.value = address.city || address.town || address.village || '';
+            console.log(address);
         });
     }
 
@@ -95,19 +96,24 @@ export default function Page() {
 
             <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 
-                <div className="my-2 p-2 flex flex-col space-y-2 text-center">
+                <div className="my-2 flex flex-col space-y-2 text-center">
                     <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
-                    <div className="flex flex-col shadow-xl rounded-md">
-                    <select
-                        name="inuitweb"
-                        defaultValue={InUitWeb.in}
-                        onChange={handleChange}
-                        className="p-2 rounded-md focus:outline-none bg-slate-100 text-black"
-                    >
-                        <option value={InUitWeb.in}>In</option>
-                        <option value={InUitWeb.uit}>Uit</option>
-                        <option value={InUitWeb.web}>Web</option>
-                    </select>
+                    <div className="relative">
+                        <select
+                            name="inuitweb"
+                            defaultValue={InUitWeb.in}
+                            onChange={handleChange}
+                            className="p-2 shadow-xl rounded-md focus:outline-none bg-slate-100 text-black w-full appearance-none"
+                        >
+                            {
+                                Object.values(InUitWeb).map((value) => (
+                                    <option key={value} value={value}>{`${value.charAt(0).toUpperCase()}${value.slice(1)}`}</option>
+                                ))
+                            }
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
                     </div>
                 </div>
 
@@ -139,21 +145,24 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="my-2 p-2 flex flex-col space-y-2 text-center">
+                <div className="my-2 flex flex-col space-y-2 text-center">
                     <label className="text-center" htmlFor="reden">Reden</label>
-                    <div className="flex flex-col shadow-xl rounded-md">
-                    <select
-                        name="reden"
-                        defaultValue={Reden.divers}
-                        onChange={handleChange}
-                        className="p-2 rounded-md focus:outline-none bg-slate-100 text-black"
-                    >
-                        <option value={Reden.divers}>Divers</option>
-                        <option value={Reden.netwerk}>Netwerk</option>
-                        <option value={Reden.offerte}>Offerte</option>
-                        <option value={Reden.order}>Order</option>
-                        <option value={Reden.service}>Service</option>
-                    </select>
+                    <div className="relative">
+                        <select
+                            name="reden"
+                            defaultValue={Reden.divers}
+                            onChange={handleChange}
+                            className="p-2 shadow-xl rounded-md focus:outline-none bg-slate-100 text-black w-full appearance-none"
+                        >
+                            {
+                                Object.values(Reden).map((value) => (
+                                    <option key={value} value={value}>{`${value.charAt(0).toUpperCase()}${value.slice(1)}`}</option>
+                                ))
+                            }
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
                     </div>
                 </div>
                 
