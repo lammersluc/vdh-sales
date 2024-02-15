@@ -40,12 +40,14 @@ export default function Page() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value === 'on' ? true : value === 'off' ? false : value })
 
+        console.log(e.target.form.inuitweb.value)
+        console.log(e.target.form.reden.value)
+
         if (value !== InUitWeb.uit || e.target.form.locatie.value) return;
 
         navigator.geolocation.getCurrentPosition(async (p) => {
             const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}&zoom=18&addressdetails=1`)).json()).address;
             e.target.form.locatie.value = address.city || address.town || address.village || '';
-            console.log(address);
         });
     }
 
@@ -98,16 +100,20 @@ export default function Page() {
 
                 <div className="my-2 flex flex-col space-y-2 text-center">
                     <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
-                    <div className="relative">
+                    <div className="relative flex flex-col">
                         <select
                             name="inuitweb"
-                            defaultValue={InUitWeb.in}
                             onChange={handleChange}
-                            className="p-2 shadow-xl rounded-md focus:outline-none bg-slate-100 text-black w-full appearance-none"
+                            className="p-2 shadow-xl rounded-md focus:outline-none bg-slate-100 appearance-none"
                         >
                             {
                                 Object.values(InUitWeb).map((value) => (
-                                    <option key={value} value={value}>{`${value.charAt(0).toUpperCase()}${value.slice(1)}`}</option>
+                                    <option
+                                        key={value}
+                                        value={value}
+                                    >
+                                        {value.charAt(0).toUpperCase() + value.slice(1)}
+                                    </option>
                                 ))
                             }
                         </select>
@@ -147,16 +153,20 @@ export default function Page() {
 
                 <div className="my-2 flex flex-col space-y-2 text-center">
                     <label className="text-center" htmlFor="reden">Reden</label>
-                    <div className="relative">
+                    <div className="relative flex flex-col">
                         <select
                             name="reden"
-                            defaultValue={Reden.divers}
                             onChange={handleChange}
-                            className="p-2 shadow-xl rounded-md focus:outline-none bg-slate-100 text-black w-full appearance-none"
+                            className="p-2 shadow-xl rounded-md focus:outline-none bg-slate-100 appearance-none"
                         >
                             {
                                 Object.values(Reden).map((value) => (
-                                    <option key={value} value={value}>{`${value.charAt(0).toUpperCase()}${value.slice(1)}`}</option>
+                                    <option
+                                        key={value}
+                                        value={value}
+                                    >
+                                        {value.charAt(0).toUpperCase() + value.slice(1)}
+                                    </option>
                                 ))
                             }
                         </select>
