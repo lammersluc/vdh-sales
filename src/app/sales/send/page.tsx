@@ -40,9 +40,6 @@ export default function Page() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value === 'on' ? true : value === 'off' ? false : value })
 
-        console.log(e.target.form.inuitweb.value)
-        console.log(e.target.form.reden.value)
-
         if (value !== InUitWeb.uit || e.target.form.locatie.value) return;
 
         navigator.geolocation.getCurrentPosition(async (p) => {
