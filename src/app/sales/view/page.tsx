@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
 
-import { auth, sales } from "@/utils";
+import { admin, auth, sales } from "@/utils";
 
 export default function Page() {
 
@@ -30,7 +30,7 @@ export default function Page() {
 
         e.preventDefault();
 
-        const promise = new Promise(async (resolve, reject) => {
+        const promise = new Promise<string>(async (resolve, reject) => {
 
             const begin = new Date(formData.begin).getTime();
             const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
@@ -41,7 +41,7 @@ export default function Page() {
 
                 let d;
                 
-                if (localStorage.getItem('user') === 'admin') {
+                if (admin()) {
                     d = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
                     const o = Array.from(new Set(d.map(doc => doc.gebruiker)));
                     setUserOptions(o);
@@ -57,14 +57,15 @@ export default function Page() {
                 
             } catch (error: any) { return reject('Er ging iets mis...'); }
 
-            resolve(e.target.reset());
+            e.target.reset();
+            resolve('Data geladen');
 
         });
 
         toast.promise(promise, {
             loading: 'Laden...',
-            success: 'Data geladen',
-            error: (error) => error
+            success: msg => msg,
+            error: err => err
         });
 
     }

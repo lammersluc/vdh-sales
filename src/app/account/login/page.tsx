@@ -26,7 +26,7 @@ export default function Page() {
     
         e.preventDefault();
 
-        const promise = new Promise(async (resolve, reject) => {
+        const promise = new Promise<string>(async (resolve, reject) => {
 
             try {
 
@@ -35,14 +35,15 @@ export default function Page() {
 
             } catch (error: any) { return reject('Ongeldige ingloggegevens'); }
 
-            resolve(router.push('/'));
+            router.push('/');
+            resolve('Succesvol ingelogd');
 
         });
 
         toast.promise(promise, {
             loading: 'Inloggen...',
-            success: 'Ingelogd',
-            error: (error) => error
+            success: msg => msg,
+            error: err => err
         });
 
     }

@@ -25,20 +25,21 @@ export default function Page() {
         
         e.preventDefault();
 
-        const promise = new Promise(async (resolve, reject) => {
+        const promise = new Promise<string>(async (resolve, reject) => {
 
             try {
                 await sendPasswordResetEmail(auth, formData.email);
             } catch (error: any) { return reject('Ongeldige email') }
 
-            resolve(router.push('/'));
+            router.push('/');
+            resolve('Email verzonden');
 
         });
 
         toast.promise(promise, {
             loading: 'Email verzenden...',
-            success: 'Email verzonden',
-            error: (error) => error
+            success: msg => msg,
+            error: err => err
         });
 
     }

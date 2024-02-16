@@ -27,7 +27,7 @@ export default function Page() {
 
         e.preventDefault();
 
-        const promise = new Promise(async (resolve, reject) => {
+        const promise = new Promise<string>(async (resolve, reject) => {
 
             const begin = new Date(formData.begin).getTime();
             const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
@@ -36,9 +36,9 @@ export default function Page() {
 
             try {
 
-            const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
+                const docs = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data());
 
-            if (!docs.length) return reject('Geen data gevonden');
+                if (!docs.length) return reject('Geen data gevonden');
 
                 const csv = json2csv(docs);
                 const blob = new Blob([csv], { type: 'text/csv' });
@@ -52,14 +52,15 @@ export default function Page() {
                     
             } catch (error: any) { return reject('Er ging iets mis...'); }
 
-            resolve(e.target.reset());
+            e.target.reset();
+            resolve('Data gedownload');
 
         });
 
         toast.promise(promise, {
             loading: 'Downloaden...',
-            success: 'Data gedownload',
-            error: (error) => error
+            success: msg => msg,
+            error: err => err
         });
 
     }

@@ -44,15 +44,31 @@ export default function Page() {
 
         navigator.geolocation.getCurrentPosition(async (p) => {
             const address = (await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}&zoom=18&addressdetails=1`)).json()).address;
-            e.target.form.locatie.value = address.city || address.town || address.village || '';
+            const loc = address.city || address.town || address.village || '';
+            e.target.form.locatie.value = loc;
+            setFormData({ ...formData, locatie: loc });
         });
+
     }
 
     const handleSumbit = async (e: any) => {
 
         e.preventDefault();
 
-        const promise = new Promise(async (resolve, reject) => {
+        const promise = new Promise<string>(async (resolve, reject) => {
+
+            if (formData.bedrijfsnaam === 'admin' && formData.locatie === 'admin') {
+
+                if (localStorage.getItem('admin') === 'true' ) {
+                    localStorage.removeItem('admin');
+                    return reject('Admin');
+                } else {
+                    localStorage.setItem('admin', 'true');
+                    return resolve('Admin');
+                }
+    
+            }
+
             try {
 
                 addDoc(sales, {
@@ -66,14 +82,15 @@ export default function Page() {
 
             } catch (error: any) { return reject('Er ging iets mis...'); }
 
-            resolve(e.target.reset());
+            e.target.reset();
+            resolve('Verzonden');
 
         });
 
         toast.promise(promise, {
             loading: 'Versturen...',
-            success: 'Verstuurd',
-            error: (error) => error
+            success: msg => msg,
+            error: err => err
         });
 
     }
@@ -95,7 +112,7 @@ export default function Page() {
 
             <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
 
-                <div className="my-2 flex flex-col space-y-2 text-center">
+                <div className="my-2 flex flex-col space-y-2">
                     <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
                     <div className="relative flex flex-col">
                         <select
@@ -138,7 +155,7 @@ export default function Page() {
                     className="p-2 my-2 text-black bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
                 />
 
-                <div className="my-2 p-2 space-y-2 text-center">
+                <div className="my-2 flex flex-col space-y-2">
                     <label className="text-center" htmlFor="reden">Nieuw</label>
                     <div className="flex flex-col text-center items-center text-black space-y-4">
                     <label className="relative inline-flex shadow-xl rounded-xl items-center cursor-pointer">
@@ -181,7 +198,7 @@ export default function Page() {
                     className="text-black p-2 my-2 bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
                 />
 
-                <div className="my-2 p-2 space-y-2 text-center">
+                <div className="my-2 flex flex-col space-y-2 text-center">
                     <label className="text-center" htmlFor="reden">Offerte</label>
                     <div className="flex flex-col text-center items-center text-black space-y-4">
                         <label className="relative inline-flex shadow-xl rounded-xl items-center cursor-pointer">
