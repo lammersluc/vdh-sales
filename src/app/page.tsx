@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { admin, auth } from "@/utils";
+import { auth } from "@/utils";
 
 export default function Page() {
 
     const pages = [
         { name: 'Verzenden', onClick: (e: any) => { e.preventDefault(); router.push('/sales/send') }},
         { name: 'Bekijken', onClick: (e: any) => { e.preventDefault(); router.push('/sales/view') } },
-        admin() && { name: 'Downloaden', onClick: (e: any) => { e.preventDefault(); router.push('/sales/download') } },
         { name: 'Uitloggen', onClick: (e: any) => { e.preventDefault(); auth.signOut() }, className: 'mt-8 bg-red-500'}
     ];
     const [isUserValid, setIsUserValid] = useState(false);

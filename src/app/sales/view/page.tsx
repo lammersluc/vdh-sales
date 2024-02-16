@@ -4,27 +4,33 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
+import { DateRangePicker } from "react-date-range";
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import { MdOutlineFileDownload } from 'react-icons/md'
 
 import { admin, auth, sales } from "@/utils";
+import { json2csv } from "json-2-csv";
+import { nl } from "date-fns/locale";
 
 export default function Page() {
 
     const router = useRouter();
 
-    const [visible, setVisible] = useState(false);
     const [userOptions, setUserOptions] = useState([] as any[]);
     const [selectedUsers, setSelectedUsers] = useState([] as any[]);
     const [docs, setDocs] = useState([] as any[])
     const [isUserValid, setIsUserValid] = useState(false);
-    const [formData, setFormData] = useState({
-        begin: Date.now() - 7 * 24 * 60 * 60 * 1000,
-        eind: Date.now()
-    });
+    const [dateRange, setDateRange] = useState([
+        {
+            startDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+            endDate: new Date(),
+            key: 'selection'
+        }
+    ]);
+    
 
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value })
-    }
+    const handleChange = (ranges: any) => setDateRange([ranges.selection]);
 
     const handleSumbit = async (e: any) => {
 
@@ -32,28 +38,25 @@ export default function Page() {
 
         const promise = new Promise<string>(async (resolve, reject) => {
 
-            const begin = new Date(formData.begin).getTime();
-            const eind = new Date(formData.eind).setHours(23, 59, 59, 999);
+            const start = dateRange[0].startDate.setHours(0, 0, 0, 0);
+            const end = dateRange[0].endDate.setHours(23, 59, 59, 999);
             
-            if (begin > eind) return reject('Einddatum moet na begindatum zijn');
-
             try {
 
                 let d;
                 
                 if (admin()) {
-                    d = (await getDocs(query(sales, where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
+                    d = (await getDocs(query(sales, where("datum", ">=", start), where("datum", "<=", end)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
                     const o = Array.from(new Set(d.map(doc => doc.gebruiker)));
                     setUserOptions(o);
                     setSelectedUsers(o);
                 } else {
-                    d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", begin), where("datum", "<=", eind)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
+                    d = (await getDocs(query(sales, where("gebruiker", "==", auth.currentUser?.email), where("datum", ">=", start), where("datum", "<=", end)))).docs.map(doc => doc.data()).sort((a, b) => b.datum - a.datum);
                 }
 
                 if (!d.length) return reject('Geen data gevonden');
                 
                 setDocs(d);
-                setVisible(true);
                 
             } catch (error: any) { return reject('Er ging iets mis...'); }
 
@@ -104,25 +107,63 @@ export default function Page() {
     if (isUserValid) return (
 
         <div className="flex flex-col h-full p-4 justify-center m-auto">
-        {
-            visible ? (
+
+            { docs.length > 0 ? (
 
                 <div>
                     
                     {
                         userOptions.length > 0 && (
-                            <div className="mb-6 w-full mx-auto flex flex-row flex-wrap justify-evenly space-x-2 space-y-2">
-                                {userOptions.map((userOption, index) => (
-                                    <label key={index} className="inline-flex shadow-xl items-center justify-center px-3 py-1 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        <input
-                                            type="checkbox"
-                                            value={userOption}
-                                            checked={selectedUsers.includes(userOption)}
-                                            onChange={(e) => handleCheckboxChange(e, userOption)}
-                                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
-                                        <span className="ml-2">{formatUser(userOption)}</span>
-                                    </label>
-                                ))}
+                            <div className="flex flex-row justify-center mx-2 space-x-2">
+                                <div className="w-8 h-8 mt-4 text-blue-500" />
+                                <div className="mb-6 w-full mx-auto flex flex-row flex-wrap justify-evenly space-x-2 space-y-2">
+                                    {userOptions.map((userOption, index) => (
+                                        <label key={index} className="inline-flex shadow-xl items-center justify-center px-3 py-1 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            <input
+                                                type="checkbox"
+                                                value={userOption}
+                                                checked={selectedUsers.includes(userOption)}
+                                                onChange={(e) => handleCheckboxChange(e, userOption)}
+                                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"/>
+                                            <span className="ml-2">{formatUser(userOption)}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                <MdOutlineFileDownload
+                                    className="w-8 h-8 mt-4 text-blue-500 cursor-pointer"
+                                    onClick={() => {
+                                        const promise = new Promise<string>(async (resolve, reject) => {
+
+                                            const selected = docs.filter(doc => selectedUsers.includes(doc.gebruiker));
+
+                                            if (!selected.length) return reject('Geen data geselecteerd');
+                                
+                                            try {
+                                                                        
+                                                const csv = json2csv(selected);
+                                                const blob = new Blob([csv], { type: 'text/csv' });
+                                                const url = window.URL.createObjectURL(blob);
+                                                const a = document.createElement('a');
+                                                a.href = url;
+                                                a.download = 'data.csv';
+                                                document.body.appendChild(a);
+                                                a.click();
+                                                document.body.removeChild(a);
+                                                    
+                                            } catch (error: any) { return reject('Er ging iets mis...'); }
+                                
+                                            resolve('Data gedownload');
+                                
+                                        });
+                                
+                                        toast.promise(promise, {
+                                            loading: 'Downloaden...',
+                                            success: msg => msg,
+                                            error: err => err
+                                        });
+                                    }}
+                                />
+
                             </div>
                         )
                     }
@@ -175,41 +216,27 @@ export default function Page() {
 
             ) : (
 
-                <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
+                <form onSubmit={handleSumbit} id="form" className="flex flex-col items-center space-y-4">
 
-                    <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
-                        <input
-                            name="begin"
-                            type="date"
-                            defaultValue={new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                            required={true}
+                        <DateRangePicker
                             onChange={handleChange}
-                            className="w-full h-full text-black p-2 bg-slate-100 focus:outline-none rounded-md text-center"
+                            ranges={dateRange}
+                            className="w-full h-full text-black my-2 p-2 bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
+                            locale={nl}
+                            showDateDisplay={false}
                         />
-                    </div>
-
-                    <div className="my-2 w-full space-y-2 shadow-xl rounded-full text-center">
-                        <input
-                            name="eind"
-                            type="date"
-                            defaultValue={new Date().toISOString().split('T')[0]}
-                            required={true}
-                            onChange={handleChange}
-                            className="w-full h-full p-2 text-black bg-slate-100 focus:outline-none rounded-md text-center"
-                        />
-                    </div>
-
+        
                     <button
                         type="submit"
-                        className="p-2 bg-blue-500 text-white rounded-md shadow-xl"
+                        className="p-2 bg-blue-500 text-white rounded-md shadow-xl w-80"
                     >
                         Bekijk
                     </button>
-
+        
                 </form>
 
-            )
-        }
+            )}
+
         </div>
             
     );
