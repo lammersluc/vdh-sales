@@ -21,10 +21,17 @@ export default function Page() {
     const [selectedUsers, setSelectedUsers] = useState([] as any[]);
     const [docs, setDocs] = useState([] as any[])
     const [isUserValid, setIsUserValid] = useState(false);
+    
+    const monday = new Date();
+    const sunday = new Date();
+    
+    monday.setDate(monday.getDate() - monday.getDay() + 1);
+    sunday.setDate(monday.getDate() + 6);
+    
     const [dateRange, setDateRange] = useState([
         {
-            startDate: new Date(),
-            endDate: new Date(),
+            startDate: monday,
+            endDate: sunday,
             key: 'selection'
         }
     ]);
@@ -74,14 +81,9 @@ export default function Page() {
 
     const handleCheckboxChange = (e: any, user: string) => {
 
-        if (e.target.checked) {
-            setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, user]);
-        } else {
-            setSelectedUsers((prevSelectedUsers) =>
-                prevSelectedUsers.filter((selectedUser) => selectedUser !== user)
-            );
-        }
-
+        if (e.target.checked) setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, user]);
+        else setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((selectedUser) => selectedUser !== user));
+        
     };
 
     const formatUser = (user: string) => 

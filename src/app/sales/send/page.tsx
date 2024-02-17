@@ -57,18 +57,6 @@ export default function Page() {
 
         const promise = new Promise<string>(async (resolve, reject) => {
 
-            if (formData.bedrijfsnaam === 'admin' && formData.locatie === 'admin') {
-
-                if (localStorage.getItem('admin') === 'true' ) {
-                    localStorage.removeItem('admin');
-                    return reject('Admin');
-                } else {
-                    localStorage.setItem('admin', 'true');
-                    return resolve('Admin');
-                }
-    
-            }
-
             try {
 
                 addDoc(sales, {
