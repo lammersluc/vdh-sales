@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getDocs, query, where } from "firebase/firestore";
-import { DateRangePicker } from "react-date-range";
+import { DateRange } from "react-date-range";
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { MdOutlineFileDownload } from 'react-icons/md'
@@ -23,13 +23,12 @@ export default function Page() {
     const [isUserValid, setIsUserValid] = useState(false);
     const [dateRange, setDateRange] = useState([
         {
-            startDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+            startDate: new Date(),
             endDate: new Date(),
             key: 'selection'
         }
     ]);
     
-
     const handleChange = (ranges: any) => setDateRange([ranges.selection]);
 
     const handleSumbit = async (e: any) => {
@@ -216,14 +215,15 @@ export default function Page() {
 
             ) : (
 
-                <form onSubmit={handleSumbit} id="form" className="flex flex-col items-center space-y-4">
+                <form onSubmit={handleSumbit} className="flex flex-col items-center space-y-4">
 
-                        <DateRangePicker
+                        <DateRange
                             onChange={handleChange}
                             ranges={dateRange}
-                            className="w-full h-full text-black my-2 p-2 bg-slate-100 focus:outline-none shadow-xl rounded-md text-center"
+                            className="text-black my-2 p-2 focus:outline-none shadow-xl rounded-md"
                             locale={nl}
                             showDateDisplay={false}
+                            fixedHeight={true}                            
                         />
         
                     <button

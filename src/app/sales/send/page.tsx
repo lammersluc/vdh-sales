@@ -110,7 +110,7 @@ export default function Page() {
             
         <div className="flex flex-col h-full p-4 justify-center m-auto">
 
-            <form onSubmit={handleSumbit} id="form" className="flex flex-col space-y-4 w-80">
+            <form onSubmit={handleSumbit} className="flex flex-col space-y-4 w-80">
 
                 <div className="my-2 flex flex-col space-y-2">
                     <label className="text-center" htmlFor="inuitweb">In / Uit / Web</label>
