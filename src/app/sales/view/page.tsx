@@ -220,7 +220,7 @@ export default function Page() {
                         <DateRange
                             onChange={handleChange}
                             ranges={dateRange}
-                            className="text-black my-2 p-2 focus:outline-none shadow-xl rounded-md"
+                            className="my-2 p-2 rounded-md shadow-xl"
                             locale={nl}
                             showDateDisplay={false}
                             fixedHeight={true}                            
